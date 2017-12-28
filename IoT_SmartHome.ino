@@ -1,27 +1,24 @@
 #include <ESP8266WiFi.h>
+#include <DNSServer.h>
+#include <ESP8266WebServer.h>
+#include <WiFiManager.h>  
 #include <FirebaseArduino.h>
 
 #define FIREBASE_HOST "iot-smart-home-01.firebaseio.com"
 #define FIREBASE_AUTH "QwRHZ5YdmTrhlP0CG83lkwJOMRkUABhnCvIY5OzJ"
-#define WIFI_SSID "www.amalshajan.me"
-#define WIFI_PASSWORD "amalshajan.me"
+
+//#define WIFI_SSID "www.amalshajan.me"
+//#define WIFI_PASSWORD "amalshajan.me"
 
 String username =  "amalshajan2011";
 
 int pins[] = {D1, D2, D3, D4, D5};
 
 void setupConnection() {
-    // connect to wifi.
-  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
-  Serial.print("connecting");
-  while (WiFi.status() != WL_CONNECTED) {
-    Serial.print(".");
-    delay(500);
-  }
-  Serial.println();
-  Serial.print("connected: ");
-  Serial.println(WiFi.localIP());
-
+  
+    WiFiManager wifiManager;
+  wifiManager.autoConnect("IoT SmartHome");
+// default ip 192.168.4.1
   Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH);
 }
 
