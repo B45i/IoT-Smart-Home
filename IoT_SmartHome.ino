@@ -7,9 +7,6 @@
 #define FIREBASE_HOST "iot-smart-home-01.firebaseio.com"
 #define FIREBASE_AUTH "QwRHZ5YdmTrhlP0CG83lkwJOMRkUABhnCvIY5OzJ"
 
-//#define WIFI_SSID "www.amalshajan.me"
-//#define WIFI_PASSWORD "amalshajan.me"
-
 String username =  "amalshajan2011";
 
 int pins[] = {D1, D2, D3, D4, D5};
