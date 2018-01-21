@@ -8,14 +8,15 @@
 #include <ArduinoJson.h> //From FirebaseArduino
 #include <FS.h>
 
-#define FIREBASE_HOST "iot-smart-home-01.firebaseio.com"
-#define FIREBASE_AUTH "QwRHZ5YdmTrhlP0CG83lkwJOMRkUABhnCvIY5OzJ"
+#define FIREBASE_HOST "iotsmarthome-309fa.firebaseio.com"
+#define FIREBASE_AUTH "mkE2Ktf36bS7urHXX0g8wyg7lHUeyZi0Nr5zU3pV"
 
-String username =  "amalshajan2011";
+String username =  "MVs13qV0Txgxh3u8zIXk5VaOJDZ2";
 
-int pins[] = {D1, D2, D3, D4, D5};
+int noPins = 8;
+int pins[] = {D0, D1, D2, D3, D4, D5, D6, D7};
 
-char user_name[34] = "";
+char UID[64] = "";
 
 bool shouldSaveConfig = false;
 
@@ -46,7 +47,7 @@ void loadSavedConfig() {
         json.printTo(Serial);
         if (json.success()) {
           Serial.println("\nparsed json");
-          strcpy(user_name, json["user_name"]);
+          strcpy(UID, json["UID"]);
         }
         else {
           Serial.println("failed to load json config");
@@ -61,23 +62,23 @@ void loadSavedConfig() {
 
 
 void setupConnection() {
-  
-  WiFiManagerParameter custom_user_name("user_name", "USER NAME", user_name, 34);
+  // id/name placeholder/prompt default length
+  WiFiManagerParameter custom_UID("UID", "UID", UID, 64);
   WiFiManager wifiManager;
   wifiManager.setSaveConfigCallback(saveConfigCallback);
-  wifiManager.addParameter(&custom_user_name);
+  wifiManager.addParameter(&custom_UID);
   wifiManager.autoConnect("IoT SmartHome");
   // default IP: 192.168.4.1
   Serial.println("connected...");
 
-  strcpy(user_name, custom_user_name.getValue());
+  strcpy(UID, custom_UID.getValue());
 
   // save  to FS
   if (shouldSaveConfig) {
     Serial.println("saving config");
     DynamicJsonBuffer jsonBuffer;
     JsonObject& json = jsonBuffer.createObject();
-    json["user_name"] = user_name;
+    json["UID"] = UID;
 
     File configFile = SPIFFS.open("/config.json", "w");
     if (!configFile) {
@@ -97,7 +98,7 @@ void setupConnection() {
 
 void setupPins() {
 
-  for(int i=0;i<5;i++) {
+  for(int i=0;i<8;i++) {
     pinMode(pins[i], OUTPUT);
   }
 
@@ -105,30 +106,42 @@ void setupPins() {
 
 void togglePins(int pin) {
   
-  String pinPath = "users/"+username;
+  String pinPath = username;
   switch(pin){
     case 0:
-      pinPath += "/pin1";
+      pinPath += "/b1";
     break;
 
     case 1:
-      pinPath += "/pin2";
+      pinPath += "/b2";
     break;
 
     case 2:
-      pinPath += "/pin3";
+      pinPath += "/b3";
     break;
 
     case 3:
-      pinPath += "/pin4";
+      pinPath += "/b4";
     break;
 
     case 4:
-      pinPath += "/pin5";
+      pinPath += "/b5";
+    break;
+
+    case 5:
+      pinPath += "/b6";
+    break;
+
+    case 6:
+      pinPath += "/b7";
+    break;
+
+    case 7:
+      pinPath += "/b8";
     break;
   } 
 
-  bool pinStatus  = Firebase.getBool(pinPath);
+  bool pinStatus  = Firebase.getInt(pinPath);
   if (Firebase.failed()) {
     Serial.print("getting value failed ");
     Serial.println(Firebase.error());
@@ -142,6 +155,9 @@ void togglePins(int pin) {
 
 void setup() {
   Serial.begin(9600);
+
+   //clean FS, for testing
+   //SPIFFS.format();
   setupPins();
   loadSavedConfig();
   setupConnection();
@@ -149,11 +165,11 @@ void setup() {
 }
 
 void loop() {
-  for(int i =0;i<5;i++){
+  for(int i =0;i<noPins;i++){
     togglePins(i);
   }
   Serial.print("User name :");
-  Serial.println(user_name);
+  Serial.println(UID);
 
 }
 
