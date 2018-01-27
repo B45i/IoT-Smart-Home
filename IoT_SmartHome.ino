@@ -11,7 +11,7 @@
 #define FIREBASE_HOST "iotsmarthome-309fa.firebaseio.com"
 #define FIREBASE_AUTH "mkE2Ktf36bS7urHXX0g8wyg7lHUeyZi0Nr5zU3pV"
 
-String username =  "MVs13qV0Txgxh3u8zIXk5VaOJDZ2";
+//String username =  "MVs13qV0Txgxh3u8zIXk5VaOJDZ2";
 
 int noPins = 8;
 int pins[] = {D0, D1, D2, D3, D4, D5, D6, D7};
@@ -98,48 +98,48 @@ void setupConnection() {
 
 void setupPins() {
 
-  for(int i=0;i<8;i++) {
+  for (int i = 0; i < 8; i++) {
     pinMode(pins[i], OUTPUT);
   }
 
 }
 
 void togglePins(int pin) {
-  
-  String pinPath = username;
-  switch(pin){
+
+  String pinPath = UID;
+  switch (pin) {
     case 0:
       pinPath += "/b1";
-    break;
+      break;
 
     case 1:
       pinPath += "/b2";
-    break;
+      break;
 
     case 2:
       pinPath += "/b3";
-    break;
+      break;
 
     case 3:
       pinPath += "/b4";
-    break;
+      break;
 
     case 4:
       pinPath += "/b5";
-    break;
+      break;
 
     case 5:
       pinPath += "/b6";
-    break;
+      break;
 
     case 6:
       pinPath += "/b7";
-    break;
+      break;
 
     case 7:
       pinPath += "/b8";
-    break;
-  } 
+      break;
+  }
 
   bool pinStatus  = Firebase.getInt(pinPath);
   if (Firebase.failed()) {
@@ -148,7 +148,7 @@ void togglePins(int pin) {
     return;
   }
   else {
-    Serial.println(pinPath +" "+pinStatus);
+    Serial.println(pinPath + " " + pinStatus);
     digitalWrite(pins[pin], pinStatus);
   }
 }
@@ -156,8 +156,8 @@ void togglePins(int pin) {
 void setup() {
   Serial.begin(9600);
 
-   //clean FS, for testing
-   //SPIFFS.format();
+  //clean FS, for testing
+  //SPIFFS.format();
   setupPins();
   loadSavedConfig();
   setupConnection();
@@ -165,11 +165,11 @@ void setup() {
 }
 
 void loop() {
-  for(int i =0;i<noPins;i++){
+  for (int i = 0; i < noPins; i++) {
     togglePins(i);
   }
-  Serial.print("User name :");
-  Serial.println(UID);
+  //Serial.print("User name :");
+  //Serial.println(UID);
 
 }
 
