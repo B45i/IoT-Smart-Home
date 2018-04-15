@@ -13,8 +13,8 @@
 
 //String username =  "MVs13qV0Txgxh3u8zIXk5VaOJDZ2";
 
-int noPins = 8;
-int pins[] = {D0, D1, D2, D3, D4, D5, D6, D7};
+int noPins = 6;
+int pins[] = {D1, D2, D3, D4, D5, D6, D7, D8};
 
 char UID[64] = "";
 
@@ -106,7 +106,8 @@ void setupPins() {
 
 void togglePins(int pin) {
 
-  String pinPath = UID;
+  String pinPath = UID; "/buttonState";
+  pinPath += "/buttonState";
   switch (pin) {
     case 0:
       pinPath += "/b1";
